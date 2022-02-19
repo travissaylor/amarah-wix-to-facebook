@@ -8,9 +8,7 @@ export default function Success() {
             <Heading as="h2" size="xl" mt={6} mb={2}>
                 You have connected your Wix Account!
             </Heading>
-            <Text color={"gray.500"}>
-                You are now setup to have have facebook find your items
-            </Text>
+            <Text color={"gray.500"}>You can close this tab now</Text>
         </Box>
     )
 }

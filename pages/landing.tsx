@@ -1,14 +1,15 @@
 import { GetServerSideProps } from "next"
 import Failure from "../components/Failure"
 import Layout from "../components/Layout"
+import PublicLayout from "../components/PublicLayout"
 import Success from "../components/Success"
 import prisma from "../lib/prisma"
 
 export default function Landing({ access_token, refresh_token }) {
     return (
-        <Layout>
+        <PublicLayout>
             {access_token && refresh_token ? <Success /> : <Failure />}
-        </Layout>
+        </PublicLayout>
     )
 }
 

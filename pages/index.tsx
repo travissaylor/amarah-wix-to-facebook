@@ -8,13 +8,13 @@ import Success from "../components/Success"
 import prisma from "../lib/prisma"
 
 export default function Home({ access_token, refresh_token }) {
-    if (access_token && refresh_token) {
-        return (
-            <Layout>
-                <Success />
-            </Layout>
-        )
-    }
+    // if (access_token && refresh_token) {
+    //     return (
+    //         <Layout>
+    //             <Success />
+    //         </Layout>
+    //     )
+    // }
 
     const [loading, setLoading] = useState(false)
     useEffect(() => {
@@ -42,6 +42,7 @@ export default function Home({ access_token, refresh_token }) {
         <Layout>
             <Connect
                 link={link.toString()}
+                connected={access_token && refresh_token}
                 loading={loading}
                 onClick={(e) => setLoading(true)}
             />

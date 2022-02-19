@@ -9,7 +9,7 @@ interface Props {
     children: React.ReactNode
 }
 
-export default function Layout({ children }: Props) {
+export default function PublicLayout({ children }: Props) {
     const { data: session, status } = useSession()
     return (
         <>
@@ -21,8 +21,7 @@ export default function Layout({ children }: Props) {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Header />
-            <main>{status === "authenticated" ? children : <ErrorDiagnosis code={401} title="You Must Login to Access The Site" description="To use anything on the site, you must be logged in. Click the button below or use the navbar link." linkText="Login" linkHref="/api/auth/signin" />}</main>
+            <main>{children}</main>
         </>
     )
 }

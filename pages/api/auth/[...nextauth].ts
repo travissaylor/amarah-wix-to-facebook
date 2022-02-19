@@ -25,11 +25,14 @@ export default NextAuth({
     },
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
+            console.log("USER: ", user)
             const allowedEmails = [
                 "tdogg812013@gmail.com",
                 "travis.saylor@gmail.com",
                 "saylor.amanda@gmail.com",
             ]
+
+            console.log("User allowed: ", allowedEmails.includes(user?.email))
 
             return allowedEmails.includes(user?.email)
         },

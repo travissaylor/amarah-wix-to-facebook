@@ -1,36 +1,13 @@
-datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
-}
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
 }
 
-model Wix {
-  id            Int     @id @default(autoincrement())
-  access_token  String?
-  refresh_token String?
-}
-
-model Product {
-  id                     Int     @id @default(autoincrement())
-  title                  String
-  description            String
-  link                   String
-  imageLink              String
-  additionalImageLink    String?
-  price                  Float
-  salePrice              Float?
-  salePriceEffectiveDate Float?
-  availability           Boolean
-  inventory              Int
-  brand                  String?
-  mpn                    BigInt
-  groupId                String?
-  itemGroupId            String?
-  size                   String?
-  color                  String?
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Account {
@@ -39,12 +16,12 @@ model Account {
   type               String
   provider           String
   providerAccountId  String
-  refresh_token      String?
-  access_token       String?
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
   expires_at         Int?
   token_type         String?
   scope              String?
-  id_token           String?
+  id_token           String? @db.Text
   session_state      String?
   oauth_token_secret String?
   oauth_token        String?
@@ -78,4 +55,30 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Wix {
+  id            Int     @id @default(autoincrement())
+  access_token  String? @db.Text
+  refresh_token String? @db.Text
+}
+
+model Product {
+  id                     Int     @id @default(autoincrement())
+  title                  String
+  description            String  @db.Text
+  link                   String
+  imageLink              String
+  additionalImageLink    String?
+  price                  Float
+  salePrice              Float?
+  salePriceEffectiveDate Float?
+  availability           Boolean
+  inventory              Int
+  brand                  String?
+  mpn                    BigInt
+  groupId                String?
+  itemGroupId            String?
+  size                   String?
+  color                  String?
 }

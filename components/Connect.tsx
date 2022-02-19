@@ -7,16 +7,23 @@ import {
     Button,
     Icon,
     IconProps,
+    createIcon,
 } from "@chakra-ui/react"
 import { MouseEventHandler } from "react"
 
 interface ConnectProps {
     link: string
+    connected: boolean
     loading: boolean
     onClick: MouseEventHandler
 }
 
-export default function Connect({ link, loading, onClick }: ConnectProps) {
+export default function Connect({
+    link,
+    connected,
+    loading,
+    onClick,
+}: ConnectProps) {
     return (
         <Container maxW={"5xl"}>
             <Stack
@@ -30,28 +37,34 @@ export default function Connect({ link, loading, onClick }: ConnectProps) {
                     fontSize={{ base: "3xl", sm: "4xl", md: "6xl" }}
                     lineHeight={"110%"}
                 >
-                    Connect to{" "}
-                    <Text as={"span"} color={"orange.400"}>
+                    {connected ? "You're connected to" : "Connect to"}{" "}
+                    <Text
+                        as={"span"}
+                        color={connected ? "green.400" : "orange.400"}
+                    >
                         Wix
                     </Text>
                 </Heading>
                 <Text color={"gray.500"} maxW={"3xl"}>
-                    Connect your wix account to allow the api to pull your
-                    products
+                    {connected
+                        ? "The api is now able to utilize your wix store data. Thanks!"
+                        : "Connect your wix account to allow the api to pull your products"}
                 </Text>
-                <Stack spacing={6} direction={"row"}>
-                    <a href={link} target="_blank" onClick={onClick}>
-                        <Button
-                            rounded={"full"}
-                            px={6}
-                            colorScheme={"orange"}
-                            bg={"orange.400"}
-                            _hover={{ bg: "orange.500" }}
-                        >
-                            {loading ? "loading" : "Connect"}
-                        </Button>
-                    </a>
-                </Stack>
+                {!connected && (
+                    <Stack spacing={6} direction={"row"}>
+                        <a href={link} target="_blank" onClick={onClick}>
+                            <Button
+                                rounded={"full"}
+                                px={6}
+                                colorScheme={"orange"}
+                                bg={"orange.400"}
+                                _hover={{ bg: "orange.500" }}
+                            >
+                                {loading ? "loading" : "Connect"}
+                            </Button>
+                        </a>
+                    </Stack>
+                )}
                 <Flex w={"full"}>
                     <Illustration
                         height={{ sm: "24rem", lg: "28rem" }}
