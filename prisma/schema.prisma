@@ -64,21 +64,31 @@ model Wix {
 }
 
 model Product {
-  id                     Int     @id @default(autoincrement())
+  id                     Int              @id @default(autoincrement())
+  pid                    String
   title                  String
-  description            String  @db.Text
+  description            String           @db.Text
   link                   String
   imageLink              String
   additionalImageLink    String?
-  price                  Float
-  salePrice              Float?
-  salePriceEffectiveDate Float?
+  price                  String
+  salePrice              String?
+  salePriceEffectiveDate String?
   availability           Boolean
   inventory              Int
   brand                  String?
-  mpn                    BigInt
+  mpn                    String
   groupId                String?
   itemGroupId            String?
   size                   String?
   color                  String?
+  VariantOptions         VariantOptions[]
+}
+
+model VariantOptions {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  size      String?
+  color     String?
 }
