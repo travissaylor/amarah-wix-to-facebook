@@ -24,6 +24,11 @@ export class ProductConverterVarientStrategy
     ): ConvertedProductInterface {
         const choiceValues = Object.values(variant.choices)
 
+        const matchingOption = this.getVariantMatchingOption(
+            variant,
+            product.productOptions
+        )
+
         const matchingChoice = this.getVariantMatchingChoice(
             variant,
             product.productOptions
@@ -47,7 +52,7 @@ export class ProductConverterVarientStrategy
             : product.stock.inStock
 
         const variantOverrides = {
-            id: variant.id,
+            pid: variant.id,
             title: `${product.name} ${choiceValues.join(" ")}`,
             imageLink: imageLink || product.media.mainMedia.image.url,
             additionalImageLink: additionalImageLink,
@@ -60,12 +65,26 @@ export class ProductConverterVarientStrategy
                 " " +
                 variant.variant.priceData.currency,
             availability: availability || false,
+            // VariantOptions: {
+            //     [matchingOption.name]: matchingChoice?.value || null
+            // },
         }
 
         return {
             ...this.getDefaults(product),
-            ...variantOverrides
+            ...variantOverrides,
         }
+    }
+
+    getVariantMatchingOption(
+        variant: WixVariant,
+        productOptions: WixProductOption[]
+    ): WixProductOption {
+        return (
+            productOptions.find((option) =>
+                variant.choices.hasOwnProperty(option.name)
+            ) || null
+        )
     }
 
     getVariantMatchingChoice(
@@ -92,7 +111,7 @@ export class ProductConverterVarientStrategy
                 : product.media.items[0].image.url
 
         return {
-            id: product.id,
+            pid: product.id,
             title: product.name,
             description: product.description,
             link:

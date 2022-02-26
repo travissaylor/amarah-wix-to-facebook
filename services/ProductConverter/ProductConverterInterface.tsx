@@ -1,7 +1,7 @@
 import { WixProductProperties } from "../../types/product"
 
 export interface ConvertedProductInterface {
-    id: string
+    pid: string
     title: String
     description: String
     link: String
@@ -15,6 +15,20 @@ export interface ConvertedProductInterface {
     brand?: String
     mpn: string
     itemGroupId?: string
+    VariantOptions?: {
+        size?: string
+        color?: string
+        design?: string
+        metal?: string
+        scent?: string
+        style?: string
+        flavor?: string
+        card?: string
+        tvShow?: string
+        saying?: string
+        scentSelection?: string
+        skinType?: string
+    }
     size?: string
     color?: string
 }

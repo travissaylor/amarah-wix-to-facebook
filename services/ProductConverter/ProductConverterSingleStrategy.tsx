@@ -15,7 +15,7 @@ export class ProductConverterSingleStrategy
 
         return [
             {
-                id: product.id,
+                pid: product.id,
                 title: product.name,
                 description: product.description,
                 link:

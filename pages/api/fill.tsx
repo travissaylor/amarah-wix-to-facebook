@@ -31,10 +31,17 @@ export default async function handler(req, res) {
         }
     }
 
+    const mappedProducts = mapProductsToSchema(products)
+
+    const update = await prisma.product.createMany({
+        data: mappedProducts,
+        skipDuplicates: true,
+    })
+
     res.status(200).json({
         options: getAllProductOptions(products),
         choices: getAllVarientChoices(products),
-        products: mapProductsToSchema(products),
+        products: update,
     })
 }
 
@@ -50,6 +57,10 @@ const mapProductsToSchema = (products: Array<WixProductProperties>) => {
     })
 
     return productsWithVarients
+}
+
+const mapVariantOptions = (products: Array<WixProductProperties>) => {
+
 }
 
 const getAllVarientChoices = (products: WixProductProperties[]) => {

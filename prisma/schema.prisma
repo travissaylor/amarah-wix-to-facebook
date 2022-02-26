@@ -75,20 +75,28 @@ model Product {
   salePrice              String?
   salePriceEffectiveDate String?
   availability           Boolean
-  inventory              Int
+  inventory              Int?
   brand                  String?
   mpn                    String
   groupId                String?
   itemGroupId            String?
-  size                   String?
-  color                  String?
   VariantOptions         VariantOptions[]
 }
 
 model VariantOptions {
-  id        Int     @id @default(autoincrement())
-  productId Int
-  product   Product @relation(fields: [productId], references: [id])
-  size      String?
-  color     String?
+  id             Int     @id @default(autoincrement())
+  productId      Int
+  product        Product @relation(fields: [productId], references: [id])
+  size           String?
+  color          String?
+  saying         String?
+  design         String?
+  metal          String?
+  scent          String?
+  style          String?
+  flavor         String?
+  card           String?
+  tvShow         String?
+  scentSelection String?
+  skinType       String?
 }
