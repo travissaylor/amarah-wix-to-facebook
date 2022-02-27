@@ -22,17 +22,17 @@ export class ProductConverterSingleStrategy
                     product.productPageUrl.base.replace(/\/$/, "") +
                     product.productPageUrl.path,
                 imageLink: product.media.mainMedia.image.url,
-                additionalImageLink: additionalImageLink || null,
+                additionalImageLink: additionalImageLink || "",
                 price:
                     product.priceData.price + " " + product.priceData.currency,
                 salePrice:
                     product.priceData.discountedPrice +
                     " " +
                     product.priceData.currency,
-                salePriceEffectiveDate: null,
+                salePriceEffectiveDate: "",
                 availability: product.stock.inStock || false,
                 inventory: product.stock.quantity,
-                brand: product.brand || null,
+                brand: product.brand || "",
                 mpn: product.numericId,
                 itemGroupId: product.slug,
             },

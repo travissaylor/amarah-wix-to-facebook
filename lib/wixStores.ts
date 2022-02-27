@@ -1,6 +1,7 @@
+import { mapper } from "../dynamodb/mapper"
+import { WixTokens } from "../dynamodb/models"
 import FetchError from "../exceptions/FetchError"
 import { WixProductProperties } from "../types/product"
-import prisma from "./prisma"
 
 const API_BASE_URL = "https://www.wixapis.com/stores/v1"
 
@@ -62,18 +63,10 @@ export const upsertKeys = async (
     access_token: string,
     refresh_token: string
 ) => {
-    return await prisma.wix.upsert({
-        where: {
-            id: 1,
-        },
-        update: {
-            access_token: access_token,
-            refresh_token: refresh_token,
-        },
-        create: {
-            id: 1,
-            access_token: access_token,
-            refresh_token: refresh_token,
-        },
+    const CurrentWixTokens = new WixTokens({
+        id: 1,
+        access_token: access_token,
+        refresh_token: refresh_token,
     })
+    return CurrentWixTokens.save()
 }

@@ -1,5 +1,6 @@
-import prisma from "../../lib/prisma"
+import { Product, WixTokens } from "../../dynamodb/models"
 import { getProducts, refreshAccessToken } from "../../lib/wixStores"
+import { BatchProducts } from "../../services/ProductConverter/BatchProducts"
 import ProductConverterFactory from "../../services/ProductConverter/ProductConverterFactory"
 import {
     WixProductChoice,
@@ -8,7 +9,7 @@ import {
 } from "../../types/product"
 
 export default async function handler(req, res) {
-    const keys = await prisma.wix.findFirst()
+    const keys = await WixTokens.get(1)
     if (!keys || !keys.access_token || !keys.refresh_token) {
         res.status(500).end()
         return
@@ -31,18 +32,22 @@ export default async function handler(req, res) {
         }
     }
 
-    const mappedProducts = mapProductsToSchema(products)
+    try {
+        const mappedProducts = mapProductsToSchema(products)
 
-    const update = await prisma.product.createMany({
-        data: mappedProducts,
-        skipDuplicates: true,
-    })
-
-    res.status(200).json({
-        options: getAllProductOptions(products),
-        choices: getAllVarientChoices(products),
-        products: update,
-    })
+        const batchedProducts = BatchProducts(mappedProducts)
+    
+        batchedProducts.forEach(async (productBatch) => {
+            const putRes = await Product.batchPut(productBatch)
+        })
+    
+        res.status(200).json({
+            updated: mappedProducts.length
+        })
+    } catch(error) {
+        res.status(500).end()
+        return
+    }
 }
 
 const mapProductsToSchema = (products: Array<WixProductProperties>) => {
@@ -59,9 +64,7 @@ const mapProductsToSchema = (products: Array<WixProductProperties>) => {
     return productsWithVarients
 }
 
-const mapVariantOptions = (products: Array<WixProductProperties>) => {
-
-}
+const mapVariantOptions = (products: Array<WixProductProperties>) => {}
 
 const getAllVarientChoices = (products: WixProductProperties[]) => {
     const allChoices = {}

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import prisma from "../../lib/prisma"
+import { WixTokens } from "../../dynamodb/models"
 
 type ResponseData = {
     message: string
@@ -39,21 +39,13 @@ export default async function handler(
         return
     }
 
-    // for now, only have one wix connection
-    await prisma.wix.upsert({
-        where: {
-            id: 1,
-        },
-        update: {
-            access_token: wixData.access_token,
-            refresh_token: wixData.refresh_token,
-        },
-        create: {
-            id: 1,
-            access_token: wixData.access_token,
-            refresh_token: wixData.refresh_token,
-        },
+    const CurrentWixTokens = new WixTokens({
+        id: 1,
+        access_token: wixData.access_token,
+        refresh_token: wixData.refresh_token,
     })
+
+    const upsertRes = await CurrentWixTokens.save()
 
     const completeSetupRes = await fetch(
         "https://www.wixapis.com/apps/v1/bi-event",

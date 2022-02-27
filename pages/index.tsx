@@ -1,20 +1,10 @@
 import { GetServerSideProps } from "next"
-import Head from "next/head"
-import Image from "next/image"
 import { useEffect, useState } from "react"
 import Connect from "../components/Connect"
 import Layout from "../components/Layout"
-import Success from "../components/Success"
-import prisma from "../lib/prisma"
+import { WixTokens } from "../dynamodb/models"
 
 export default function Home({ access_token, refresh_token }) {
-    // if (access_token && refresh_token) {
-    //     return (
-    //         <Layout>
-    //             <Success />
-    //         </Layout>
-    //     )
-    // }
 
     const [loading, setLoading] = useState(false)
     useEffect(() => {
@@ -51,8 +41,7 @@ export default function Home({ access_token, refresh_token }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const keys = await prisma.wix.findFirst()
-    console.log("keys: ", keys)
+    const keys = await WixTokens.get(1)
 
     return {
         props: {

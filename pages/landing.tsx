@@ -3,7 +3,7 @@ import Failure from "../components/Failure"
 import Layout from "../components/Layout"
 import PublicLayout from "../components/PublicLayout"
 import Success from "../components/Success"
-import prisma from "../lib/prisma"
+import { WixTokens } from "../dynamodb/models"
 
 export default function Landing({ access_token, refresh_token }) {
     return (
@@ -14,7 +14,7 @@ export default function Landing({ access_token, refresh_token }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const keys = await prisma.wix.findFirst()
+    const keys = await WixTokens.get(1)
 
     return {
         props: {

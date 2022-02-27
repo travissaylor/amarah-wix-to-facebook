@@ -55,7 +55,6 @@ export class ProductConverterVarientStrategy
             pid: variant.id,
             title: `${product.name} ${choiceValues.join(" ")}`,
             imageLink: imageLink || product.media.mainMedia.image.url,
-            additionalImageLink: additionalImageLink,
             price:
                 variant.variant.priceData.price +
                 " " +
@@ -65,9 +64,17 @@ export class ProductConverterVarientStrategy
                 " " +
                 variant.variant.priceData.currency,
             availability: availability || false,
-            // VariantOptions: {
-            //     [matchingOption.name]: matchingChoice?.value || null
-            // },
+            VariantOptions: {
+                [matchingOption.name.toLocaleLowerCase()]: matchingChoice?.value,
+            },
+        }
+
+        if (Object.keys(variantOverrides.VariantOptions).length === 0) {
+            delete variantOverrides.VariantOptions
+        }
+
+        if (additionalImageLink) {
+            variantOverrides.additionalImageLink = additionalImageLink
         }
 
         return {
@@ -118,16 +125,16 @@ export class ProductConverterVarientStrategy
                 product.productPageUrl.base.replace(/\/$/, "") +
                 product.productPageUrl.path,
             imageLink: product.media.mainMedia.image.url,
-            additionalImageLink: additionalImageLink || null,
+            additionalImageLink: additionalImageLink || "",
             price: product.priceData.price + " " + product.priceData.currency,
             salePrice:
                 product.priceData.discountedPrice +
                 " " +
                 product.priceData.currency,
-            salePriceEffectiveDate: null,
+            salePriceEffectiveDate: "",
             availability: product.stock.inStock || false,
             inventory: product.stock.quantity,
-            brand: product.brand || null,
+            brand: product.brand || "",
             mpn: product.numericId,
             itemGroupId: product.slug,
         }

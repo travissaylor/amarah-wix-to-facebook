@@ -1,18 +1,29 @@
 import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
-import GithubProvider from "next-auth/providers/github"
-import TwitterProvider from "next-auth/providers/twitter"
-import Auth0Provider from "next-auth/providers/auth0"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import prisma from "../../../lib/prisma"
-// import AppleProvider from "next-auth/providers/apple"
-// import EmailProvider from "next-auth/providers/email"
+import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb"
+import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
+import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter"
+
+const config: DynamoDBClientConfig = {
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+    },
+    region: process.env.AWS_REGION,
+}
+
+const client = DynamoDBDocument.from(new DynamoDB(config), {
+    marshallOptions: {
+        convertEmptyValues: true,
+        removeUndefinedValues: true,
+        convertClassInstanceToMap: true,
+    },
+})
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
-    adapter: PrismaAdapter(prisma),
+    adapter: DynamoDBAdapter(client),
     // https://next-auth.js.org/configuration/providers/oauth
     providers: [
         FacebookProvider({

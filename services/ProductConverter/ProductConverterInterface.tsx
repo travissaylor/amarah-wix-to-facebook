@@ -9,7 +9,7 @@ export interface ConvertedProductInterface {
     additionalImageLink?: String
     price: string
     salePrice?: string
-    salePriceEffectiveDate?: Date
+    salePriceEffectiveDate?: string
     availability: Boolean
     inventory: number
     brand?: String
