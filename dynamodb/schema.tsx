@@ -1,21 +1,5 @@
 import * as dynamoose from "dynamoose"
 
-export const VariantOptionsSchema = new dynamoose.Schema({
-    id: Number,
-    size: { type: String, required: false },
-    color: { type: String, required: false },
-    design: { type: String, required: false },
-    metal: { type: String, required: false },
-    scent: { type: String, required: false },
-    style: { type: String, required: false },
-    flavor: { type: String, required: false },
-    card: { type: String, required: false },
-    tvShow: { type: String, required: false },
-    saying: { type: String, required: false },
-    scentSelection: { type: String, required: false },
-    skinType: { type: String, required: false },
-})
-
 export const ProductSchema = new dynamoose.Schema(
     {
         pid: String,
