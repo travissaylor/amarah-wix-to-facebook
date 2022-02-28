@@ -3,13 +3,14 @@ import FacebookProvider from "next-auth/providers/facebook"
 import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb"
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter"
+import { NextAuthModel } from "../../../dynamodb/models"
 
 const config: DynamoDBClientConfig = {
     credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+        accessKeyId: process.env.DYNAMODB_AWS_ACCESS_KEY_ID as string,
+        secretAccessKey: process.env.DYNAMODB_AWS_SECRET_ACCESS_KEY as string,
     },
-    region: process.env.AWS_REGION,
+    region: process.env.DYNAMODB_AWS_REGION,
 }
 
 const client = DynamoDBDocument.from(new DynamoDB(config), {
@@ -20,10 +21,18 @@ const client = DynamoDBDocument.from(new DynamoDB(config), {
     },
 })
 
+async function ensureNextAuth() {
+    await NextAuthModel.table.create.request()
+}
+
+ensureNextAuth()
+
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
-    adapter: DynamoDBAdapter(client),
+    adapter: DynamoDBAdapter(client, {
+        tableName: process.env.NODE_ENV + "-next-auth",
+    }),
     // https://next-auth.js.org/configuration/providers/oauth
     providers: [
         FacebookProvider({

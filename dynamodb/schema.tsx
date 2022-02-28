@@ -1,5 +1,11 @@
 import * as dynamoose from "dynamoose"
 
+dynamoose.aws.sdk.config.update({
+    "accessKeyId": process.env.DYNAMODB_AWS_ACCESS_KEY_ID,
+    "secretAccessKey": process.env.DYNAMODB_AWS_SECRET_ACCESS_KEY,
+    "region": process.env.DYNAMODB_AWS_REGION
+});
+
 export const ProductSchema = new dynamoose.Schema(
     {
         pid: String,
@@ -50,5 +56,34 @@ export const WixTokensSchema = new dynamoose.Schema(
     {
         saveUnknown: false,
         timestamps: true,
+    }
+)
+
+export const NextAuthSchema = new dynamoose.Schema(
+    {
+        pk: {
+            type: String,
+            hashKey: true,
+        },
+        sk: {
+            type: String,
+            rangeKey: true,
+        },
+        GSI1SK: {
+            type: String,
+        },
+        GSI1PK: {
+            type: String,
+            index: {
+                name: "GSI1",
+                global: true,
+                rangeKey: "GSI1SK",
+                throughput: { read: 5, write: 10 },
+            },
+        },
+    },
+    {
+        saveUnknown: true,
+        timestamps: false,
     }
 )
