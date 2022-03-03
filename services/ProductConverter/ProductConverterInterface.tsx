@@ -2,16 +2,16 @@ import { WixProductProperties } from "../../types/product"
 
 export interface ConvertedProductInterface {
     pid: string
-    title: String
-    description: String
-    link: String
-    imageLink: String
-    additionalImageLink?: String
+    title: string
+    description: string
+    link: string
+    imageLink: string
+    additionalImageLink?: string
     price: string
     salePrice?: string
     availability: Boolean
     inventory: number
-    brand?: String
+    brand?: string
     mpn: string
     itemGroupId?: string
     size?: string

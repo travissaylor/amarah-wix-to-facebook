@@ -1,11 +1,13 @@
-version: '3.8'
+version: '3'
 services:
-  dynamodb-local:
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
-    image: "amazon/dynamodb-local:latest"
-    container_name: dynamodb-local
+  mysql-db:
+    image: mysql:5.7
+    restart: always
     ports:
-      - "8000:8000"
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: prisma
     volumes:
-      - "./docker/dynamodb:/home/dynamodblocal/data"
-    working_dir: /home/dynamodblocal
+      - mysql:/var/lib/mysql
+volumes:
+  mysql: ~

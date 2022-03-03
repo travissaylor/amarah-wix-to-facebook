@@ -1,46 +1,32 @@
+import { Products } from "@prisma/client"
 import { NextApiRequest, NextApiResponse } from "next"
 import { Product } from "../../dynamodb/models"
-
-type ResponseData = {
-    message: string
-}
+import prisma from "../../lib/prisma"
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<ResponseData>
+    res: NextApiResponse
 ) {
-    const { start = null, limit = null } = req.query
+    const { skip = "0", take = "10" } = req.query
 
-    console.log({ start, limit })
+    if (typeof skip !== "string" || typeof take !== "string") {
+        res.status(500).end()
+        return
+    }
+
+    const skipInt = parseInt(skip)
+    const takeInt = parseInt(take)
+
     try {
-        const startDecoded =
-            typeof start === "string" ? JSON.parse(start) : null
-        const limitInt = typeof limit === "string" ? parseInt(limit) : null
+        const queryRes = await prisma.products.findMany({
+            skip: skipInt,
+            take: takeInt,
+        })
 
-        console.log({ limitInt, startDecoded })
-        let products
-        if (!startDecoded) {
-            products = await fetchProducts(limitInt)
-        } else {
-            products = await fetchProducts(limitInt, startDecoded)
-        }
-        console.log({ products })
-
-        res.status(200)
+        res.status(200).json(queryRes)
     } catch (error) {
         res.status(500).end()
         console.error(error)
         return
     }
-}
-
-const fetchProducts = async (
-    limit: number = 20,
-    start: object | null = null
-) => {
-    if (!start) {
-        return await Product.query('pid').using('pid').all().exec()
-    }
-
-    return await Product.query().startAt(start).limit(limit).exec()
 }

@@ -28,11 +28,11 @@ export class ProductConverterSingleStrategy
                 : product.media.items[0].image.url
 
         if (additionalImageLink) {
-            convertedProduct.additionalLink = additionalImageLink
+            convertedProduct.additionalImageLink = additionalImageLink
         }
 
         if (product.priceData.discountedPrice) {
-            convertedProduct.discountedPrice = product.priceData.discountedPrice
+            convertedProduct.salePrice = product.priceData.discountedPrice + " " + product.priceData.currency
         }
 
         if (product.brand) {

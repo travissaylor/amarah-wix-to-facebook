@@ -118,8 +118,8 @@ export default function ProductTable(props: TableProps) {
                                             </Td>
                                             <Td
                                                 color={"gray.500"}
-                                                fontSize="md"
-                                                fontWeight="hairline"
+                                                fontSize="lg"
+                                                fontWeight="light"
                                             >
                                                 {token[x]}
                                             </Td>

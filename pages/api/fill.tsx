@@ -1,6 +1,5 @@
-import { Product, WixTokens } from "../../dynamodb/models"
+import prisma from "../../lib/prisma"
 import { getProducts, refreshAccessToken } from "../../lib/wixStores"
-import { BatchProducts } from "../../services/ProductConverter/BatchProducts"
 import ProductConverterFactory from "../../services/ProductConverter/ProductConverterFactory"
 import {
     WixProductChoice,
@@ -9,8 +8,9 @@ import {
 } from "../../types/product"
 
 export default async function handler(req, res) {
-    const keys = await WixTokens.get(1)
+    const keys = await prisma.wix.findFirst()
     if (!keys || !keys.access_token || !keys.refresh_token) {
+        console.log("No wix keys")
         res.status(500).end()
         return
     }
@@ -35,16 +35,16 @@ export default async function handler(req, res) {
     try {
         const mappedProducts = mapProductsToSchema(products)
 
-        const batchedProducts = BatchProducts(mappedProducts)
-    
-        batchedProducts.forEach(async (productBatch) => {
-            const putRes = await Product.batchPut(productBatch)
+        const update = await prisma.products.createMany({
+            data: mappedProducts,
+            skipDuplicates: true,
         })
-    
+
         res.status(200).json({
-            updated: mappedProducts.length
+            updated: update,
         })
-    } catch(error) {
+    } catch (error) {
+        console.log(error)
         res.status(500).end()
         return
     }
