@@ -9,28 +9,23 @@ export interface ConvertedProductInterface {
     additionalImageLink?: String
     price: string
     salePrice?: string
-    salePriceEffectiveDate?: string
     availability: Boolean
     inventory: number
     brand?: String
     mpn: string
     itemGroupId?: string
-    VariantOptions?: {
-        size?: string
-        color?: string
-        design?: string
-        metal?: string
-        scent?: string
-        style?: string
-        flavor?: string
-        card?: string
-        tvShow?: string
-        saying?: string
-        scentSelection?: string
-        skinType?: string
-    }
     size?: string
     color?: string
+    design?: string
+    metal?: string
+    scent?: string
+    style?: string
+    flavor?: string
+    card?: string
+    tvShow?: string
+    saying?: string
+    scentSelection?: string
+    skinType?: string
 }
 
 export interface ProductConverterStrategyInterface {
