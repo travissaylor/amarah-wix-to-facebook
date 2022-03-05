@@ -1,6 +1,5 @@
 import { GetServerSideProps } from "next"
 import Failure from "../components/Failure"
-import Layout from "../components/Layout"
 import PublicLayout from "../components/PublicLayout"
 import Success from "../components/Success"
 import prisma from "../lib/prisma"

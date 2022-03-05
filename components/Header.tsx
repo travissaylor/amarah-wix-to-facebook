@@ -15,9 +15,11 @@ import {
     Stack,
     useColorMode,
     Center,
+    Spinner,
 } from "@chakra-ui/react"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
 import { useSession } from "next-auth/react"
+import NextLink from "next/link"
 
 const NavLink = ({ children }: { children: ReactNode }) => (
     <Link
@@ -39,7 +41,7 @@ export default function Nav() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { data: session, status } = useSession()
     const loading = status === "loading"
-    console.log({ session })
+
     return (
         <>
             <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
@@ -48,7 +50,11 @@ export default function Nav() {
                     alignItems={"center"}
                     justifyContent={"space-between"}
                 >
-                    <Box>Amarah</Box>
+                    <Box>
+                        <NextLink href="/">
+                            <Link fontSize="lg">Amarah</Link>
+                        </NextLink>
+                    </Box>
 
                     <Flex alignItems={"center"}>
                         <Stack direction={"row"} spacing={7}>
@@ -97,8 +103,14 @@ export default function Nav() {
                                         </MenuItem>
                                     </MenuList>
                                 </Menu>
+                            ) : loading ? (
+                                <Center>
+                                    <Spinner />
+                                </Center>
                             ) : (
-                                <a href={`/api/auth/signin`}>Login</a>
+                                <Center>
+                                    <a href={`/api/auth/signin`}>Login</a>
+                                </Center>
                             )}
                         </Stack>
                     </Flex>

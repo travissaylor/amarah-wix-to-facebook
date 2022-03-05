@@ -10,6 +10,7 @@ import {
 export default async function handler(req, res) {
     const keys = await prisma.wix.findFirst()
     if (!keys || !keys.access_token || !keys.refresh_token) {
+        console.log("No wix keys")
         res.status(500).end()
         return
     }
@@ -31,18 +32,22 @@ export default async function handler(req, res) {
         }
     }
 
-    const mappedProducts = mapProductsToSchema(products)
+    try {
+        const mappedProducts = mapProductsToSchema(products)
 
-    const update = await prisma.product.createMany({
-        data: mappedProducts,
-        skipDuplicates: true,
-    })
+        const update = await prisma.products.createMany({
+            data: mappedProducts,
+            skipDuplicates: true,
+        })
 
-    res.status(200).json({
-        options: getAllProductOptions(products),
-        choices: getAllVarientChoices(products),
-        products: update,
-    })
+        res.status(200).json({
+            updated: update,
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).end()
+        return
+    }
 }
 
 const mapProductsToSchema = (products: Array<WixProductProperties>) => {
@@ -59,9 +64,7 @@ const mapProductsToSchema = (products: Array<WixProductProperties>) => {
     return productsWithVarients
 }
 
-const mapVariantOptions = (products: Array<WixProductProperties>) => {
-
-}
+const mapVariantOptions = (products: Array<WixProductProperties>) => {}
 
 const getAllVarientChoices = (products: WixProductProperties[]) => {
     const allChoices = {}

@@ -34,19 +34,6 @@ export class ProductConverterVarientStrategy
             product.productOptions
         )
 
-        const imageLink =
-            matchingChoice && matchingChoice.media
-                ? matchingChoice.media.mainMedia?.image.url
-                : product.media.mainMedia.image.url
-
-        const additionalImageLink =
-            matchingChoice &&
-            matchingChoice.media?.items.length > 1 &&
-            matchingChoice.media?.items[1].id !==
-                matchingChoice.media?.mainMedia.id
-                ? matchingChoice.media.items[1].image.url
-                : null
-
         const availability = matchingChoice
             ? matchingChoice.inStock
             : product.stock.inStock
@@ -54,8 +41,6 @@ export class ProductConverterVarientStrategy
         const variantOverrides = {
             pid: variant.id,
             title: `${product.name} ${choiceValues.join(" ")}`,
-            imageLink: imageLink || product.media.mainMedia.image.url,
-            additionalImageLink: additionalImageLink,
             price:
                 variant.variant.priceData.price +
                 " " +
@@ -65,15 +50,67 @@ export class ProductConverterVarientStrategy
                 " " +
                 variant.variant.priceData.currency,
             availability: availability || false,
-            // VariantOptions: {
-            //     [matchingOption.name]: matchingChoice?.value || null
-            // },
+            itemGroupId: product.slug,
         }
+
+        const imageLink =
+            matchingChoice && matchingChoice.media
+                ? matchingChoice.media.mainMedia?.image.url
+                : product.media.mainMedia.image.url
+
+        if (imageLink) {
+            variantOverrides.imageLink
+        }
+
+        const additionalImageLink =
+            matchingChoice &&
+            matchingChoice.media?.items.length > 1 &&
+            matchingChoice.media?.items[1].id !==
+                matchingChoice.media?.mainMedia.id
+                ? matchingChoice.media.items[1].image.url
+                : null
+
+        if (additionalImageLink) {
+            variantOverrides.additionalImageLink = additionalImageLink
+        }
+
+        const variantData = this.getVariantData(
+            matchingOption.name.toLocaleLowerCase(),
+            matchingChoice?.value
+        )
 
         return {
             ...this.getDefaults(product),
             ...variantOverrides,
+            ...variantData,
         }
+    }
+
+    getVariantData(optionName: string, choiceValue: string) {
+        const varientOptions = [
+            "size",
+            "color",
+            "design",
+            "metal",
+            "scent",
+            "style",
+            "flavor",
+            "card",
+            "tvShow",
+            "saying",
+            "scentSelection",
+            "skinType",
+        ]
+
+        const variantData = {}
+
+        varientOptions.forEach((option) => {
+            if (option === optionName) {
+                variantData[option] = choiceValue
+            }
+        })
+
+        return variantData
     }
 
     getVariantMatchingOption(
@@ -105,12 +142,7 @@ export class ProductConverterVarientStrategy
     }
 
     getDefaults(product: WixProductProperties): ConvertedProductInterface {
-        const additionalImageLink =
-            product.media.items[0].id === product.media.mainMedia.id
-                ? product.media.items[1]?.image.url
-                : product.media.items[0].image.url
-
-        return {
+        const convertedProduct = {
             pid: product.id,
             title: product.name,
             description: product.description,
@@ -118,18 +150,28 @@ export class ProductConverterVarientStrategy
                 product.productPageUrl.base.replace(/\/$/, "") +
                 product.productPageUrl.path,
             imageLink: product.media.mainMedia.image.url,
-            additionalImageLink: additionalImageLink || null,
             price: product.priceData.price + " " + product.priceData.currency,
-            salePrice:
-                product.priceData.discountedPrice +
-                " " +
-                product.priceData.currency,
-            salePriceEffectiveDate: null,
             availability: product.stock.inStock || false,
             inventory: product.stock.quantity,
-            brand: product.brand || null,
             mpn: product.numericId,
-            itemGroupId: product.slug,
         }
+
+        const additionalImageLink =
+            product.media.items[0].id === product.media.mainMedia.id
+                ? product.media.items[1]?.image.url
+                : product.media.items[0].image.url
+
+        if (additionalImageLink) {
+            convertedProduct.additionalImageLink = additionalImageLink
+        }
+
+        if (product.priceData.discountedPrice) {
+            convertedProduct.salePrice = product.priceData.discountedPrice + " " + product.priceData.currency
+        }
+        if (product.brand) {
+            convertedProduct.brand = product.brand
+        }
+
+        return convertedProduct
     }
 }
