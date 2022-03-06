@@ -157,7 +157,7 @@ export interface WixProductOption {
 
 export interface WixProductChoice {
     value: string
-    desciption: string
+    description: string
     media: {
         mainMedia: WixMedia
         items: Array<WixMedia>
