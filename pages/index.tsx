@@ -26,7 +26,7 @@ export default function Home({ access_token, refresh_token }) {
     )
 
     const disconnect = async () => {
-        const apiUrlString = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/api/disconnect`
+        const apiUrlString = `${window?.location.protocol}//${window?.location.hostname}:${window?.location.port}/api/disconnect`
         const url = new URL(apiUrlString)
         const res = await fetch(url.toString())
 
