@@ -25,6 +25,19 @@ export default function Home({ access_token, refresh_token }) {
         process.env.NEXT_PUBLIC_WIX_APP_REDIRECT_URL
     )
 
+    const disconnect = async () => {
+        const apiUrlString = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/api/disconnect`
+        const url = new URL(apiUrlString)
+        const res = await fetch(url.toString())
+
+        if (!res.ok) {
+            console.error(res.statusText)
+            return;
+        }
+
+        window.location.reload()
+    }
+
     return (
         <Layout>
             <Connect
@@ -32,6 +45,7 @@ export default function Home({ access_token, refresh_token }) {
                 connected={access_token && refresh_token}
                 loading={loading}
                 onClick={(e) => setLoading(true)}
+                onDisconnect={disconnect}
             />
         </Layout>
     )

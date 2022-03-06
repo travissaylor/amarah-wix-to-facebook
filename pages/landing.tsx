@@ -5,6 +5,9 @@ import Success from "../components/Success"
 import prisma from "../lib/prisma"
 
 export default function Landing({ access_token, refresh_token }) {
+    setTimeout(() => {
+        window.close()
+    }, 1000)
     return (
         <PublicLayout>
             {access_token && refresh_token ? <Success /> : <Failure />}

@@ -16,6 +16,7 @@ interface ConnectProps {
     connected: boolean
     loading: boolean
     onClick: MouseEventHandler
+    onDisconnect: MouseEventHandler
 }
 
 export default function Connect({
@@ -23,6 +24,7 @@ export default function Connect({
     connected,
     loading,
     onClick,
+    onDisconnect,
 }: ConnectProps) {
     return (
         <Container maxW={"5xl"}>
@@ -50,9 +52,14 @@ export default function Connect({
                         ? "The api is now able to utilize your wix store data. Thanks!"
                         : "Connect your wix account to allow the api to pull your products"}
                 </Text>
-                {!connected && (
+                {!connected ? (
                     <Stack spacing={6} direction={"row"}>
-                        <a href={link} target="_blank" rel="noreferrer" onClick={onClick}>
+                        <a
+                            href={link}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={onClick}
+                        >
                             <Button
                                 rounded={"full"}
                                 px={6}
@@ -63,6 +70,19 @@ export default function Connect({
                                 {loading ? "loading" : "Connect"}
                             </Button>
                         </a>
+                    </Stack>
+                ) : (
+                    <Stack spacing={6} direction={"row"}>
+                        <Button
+                            rounded={"full"}
+                            px={6}
+                            colorScheme={"green"}
+                            bg={"green.400"}
+                            _hover={{ bg: "green.500" }}
+                            onClick={onDisconnect}
+                        >
+                            {loading ? "loading" : "Disconnect"}
+                        </Button>
                     </Stack>
                 )}
                 <Flex w={"full"}>
