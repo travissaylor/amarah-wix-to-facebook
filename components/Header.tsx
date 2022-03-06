@@ -16,10 +16,13 @@ import {
     useColorMode,
     Center,
     Spinner,
+    HStack,
 } from "@chakra-ui/react"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
 import { useSession } from "next-auth/react"
 import NextLink from "next/link"
+
+const Links = [{ text: "Products", link: "/products" }]
 
 const NavLink = ({ children }: { children: ReactNode }) => (
     <Link
@@ -30,7 +33,7 @@ const NavLink = ({ children }: { children: ReactNode }) => (
             textDecoration: "none",
             bg: useColorModeValue("gray.200", "gray.700"),
         }}
-        href={"#"}
+        as={"span"}
     >
         {children}
     </Link>
@@ -55,6 +58,32 @@ export default function Nav() {
                             <Link fontSize="lg">Amarah</Link>
                         </NextLink>
                     </Box>
+
+                    <HStack
+                        as={"nav"}
+                        spacing={4}
+                        display={{ base: "none", md: "flex" }}
+                    >
+                        {Links.map((link) => (
+                            <NextLink key={link.text} href={link.link}>
+                                <Link
+                                    px={2}
+                                    py={1}
+                                    rounded={"md"}
+                                    _hover={{
+                                        textDecoration: "none",
+                                        bg: useColorModeValue(
+                                            "gray.200",
+                                            "gray.700"
+                                        ),
+                                    }}
+                                    as={"span"}
+                                >
+                                    {link.text}
+                                </Link>
+                            </NextLink>
+                        ))}
+                    </HStack>
 
                     <Flex alignItems={"center"}>
                         <Stack direction={"row"} spacing={7}>
