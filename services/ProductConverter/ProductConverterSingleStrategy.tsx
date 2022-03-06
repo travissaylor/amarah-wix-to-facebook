@@ -11,6 +11,11 @@ export class ProductConverterSingleStrategy
     convertProduct(product: WixProductProperties): ConvertedProductInterface[] {
         const strippedDescription = stripHtml(product.description)
 
+        const additionalImageLink =
+            product.media.items[0].id === product.media.mainMedia.id
+                ? product.media.items[1]?.image.url
+                : product.media.items[0].image.url
+
         const convertedProduct = {
             pid: product.id,
             title: product.name,
@@ -21,31 +26,18 @@ export class ProductConverterSingleStrategy
             link:
                 product.productPageUrl.base.replace(/\/$/, "") +
                 product.productPageUrl.path,
+            additionalImageLink: additionalImageLink,
             imageLink: product.media.mainMedia.image.url,
             price: product.priceData.price + " " + product.priceData.currency,
+            salePrice: product.priceData.discountedPrice
+                ? product.priceData.discountedPrice +
+                  " " +
+                  product.priceData.currency
+                : null,
             availability: product.stock.inStock || false,
             inventory: product.stock.quantity,
             mpn: product.numericId,
-        }
-
-        const additionalImageLink =
-            product.media.items[0].id === product.media.mainMedia.id
-                ? product.media.items[1]?.image.url
-                : product.media.items[0].image.url
-
-        if (additionalImageLink) {
-            convertedProduct.additionalImageLink = additionalImageLink
-        }
-
-        if (product.priceData.discountedPrice) {
-            convertedProduct.salePrice =
-                product.priceData.discountedPrice +
-                " " +
-                product.priceData.currency
-        }
-
-        if (product.brand) {
-            convertedProduct.brand = product.brand
+            brand: product.brand
         }
 
         return [convertedProduct]

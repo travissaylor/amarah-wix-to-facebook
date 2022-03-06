@@ -10,6 +10,34 @@ import {
     ProductConverterStrategyInterface,
 } from "./ProductConverterInterface"
 
+interface VariantOverridesInterface {
+    pid: string
+    title: string
+    description?: string
+    link?: string
+    imageLink?: string
+    additionalImageLink?: string
+    price?: string
+    salePrice?: string
+    availability?: Boolean
+    inventory?: number
+    brand?: string
+    mpn?: string
+    itemGroupId?: string
+    size?: string
+    color?: string
+    design?: string
+    metal?: string
+    scent?: string
+    style?: string
+    flavor?: string
+    card?: string
+    tvShow?: string
+    saying?: string
+    scentSelection?: string
+    skinType?: string
+}
+
 export class ProductConverterVarientStrategy
     implements ProductConverterStrategyInterface
 {
@@ -39,7 +67,7 @@ export class ProductConverterVarientStrategy
             ? matchingChoice.inStock
             : product.stock.inStock
 
-        const variantOverrides = {
+        const variantOverrides: VariantOverridesInterface = {
             pid: variant.id,
             title: `${product.name} ${choiceValues.join(" ")}`,
             price:
@@ -62,7 +90,7 @@ export class ProductConverterVarientStrategy
                 : product.media.mainMedia.image.url
 
         if (imageLink) {
-            variantOverrides.imageLink
+            variantOverrides.imageLink = imageLink
         }
 
         const additionalImageLink =
@@ -153,6 +181,11 @@ export class ProductConverterVarientStrategy
     getDefaults(product: WixProductProperties): ConvertedProductInterface {
         const strippedDescription = stripHtml(product.description)
 
+        const additionalImageLink =
+            product.media.items[0].id === product.media.mainMedia.id
+                ? product.media.items[1]?.image.url
+                : product.media.items[0].image.url
+
         const convertedProduct = {
             pid: product.id,
             title: product.name,
@@ -163,30 +196,18 @@ export class ProductConverterVarientStrategy
             link:
                 product.productPageUrl.base.replace(/\/$/, "") +
                 product.productPageUrl.path,
+            additionalImageLink: additionalImageLink,
             imageLink: product.media.mainMedia.image.url,
             price: product.priceData.price + " " + product.priceData.currency,
+            salePrice: product.priceData.discountedPrice
+                ? product.priceData.discountedPrice +
+                  " " +
+                  product.priceData.currency
+                : null,
             availability: product.stock.inStock || false,
             inventory: product.stock.quantity,
             mpn: product.numericId,
-        }
-
-        const additionalImageLink =
-            product.media.items[0].id === product.media.mainMedia.id
-                ? product.media.items[1]?.image.url
-                : product.media.items[0].image.url
-
-        if (additionalImageLink) {
-            convertedProduct.additionalImageLink = additionalImageLink
-        }
-
-        if (product.priceData.discountedPrice) {
-            convertedProduct.salePrice =
-                product.priceData.discountedPrice +
-                " " +
-                product.priceData.currency
-        }
-        if (product.brand) {
-            convertedProduct.brand = product.brand
+            brand: product.brand
         }
 
         return convertedProduct
