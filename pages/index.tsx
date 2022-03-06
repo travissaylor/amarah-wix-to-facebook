@@ -45,7 +45,7 @@ export default function Home({ access_token, refresh_token }) {
                 connected={access_token && refresh_token}
                 loading={loading}
                 onClick={(e) => setLoading(true)}
-                onDisconnect={disconnect}
+                onDisconnect={() => disconnect()}
             />
         </Layout>
     )
