@@ -1,13 +1,19 @@
+import { NextApiRequest, NextApiResponse } from "next"
+import { getSession } from "next-auth/react"
 import prisma from "../../lib/prisma"
 import { getProducts, refreshAccessToken } from "../../lib/wixStores"
 import ProductConverterFactory from "../../services/ProductConverter/ProductConverterFactory"
-import {
-    WixProductChoice,
-    WixProductProperties,
-    WixVariant,
-} from "../../types/product"
+import { WixProductProperties } from "../../types/product"
 
-export default async function handler(req, res) {
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
+    const session = await getSession({ req })
+    if (!session) {
+        return res.status(401).end()
+    }
+
     const keys = await prisma.wix.findFirst()
     if (!keys || !keys.access_token || !keys.refresh_token) {
         console.log("No wix keys")

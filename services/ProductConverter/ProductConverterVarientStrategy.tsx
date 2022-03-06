@@ -1,3 +1,4 @@
+import { stripHtml } from "string-strip-html"
 import {
     WixProductChoice,
     WixProductOption,
@@ -150,10 +151,15 @@ export class ProductConverterVarientStrategy
     }
 
     getDefaults(product: WixProductProperties): ConvertedProductInterface {
+        const strippedDescription = stripHtml(product.description)
+
         const convertedProduct = {
             pid: product.id,
             title: product.name,
-            description: product.description,
+            description:
+                strippedDescription.result ||
+                product.productPageUrl.base.replace(/\/$/, "") +
+                    product.productPageUrl.path,
             link:
                 product.productPageUrl.base.replace(/\/$/, "") +
                 product.productPageUrl.path,

@@ -25,8 +25,6 @@ export default function Home({ access_token, refresh_token }) {
         process.env.NEXT_PUBLIC_WIX_APP_REDIRECT_URL
     )
 
-    console.log({ loading })
-
     return (
         <Layout>
             <Connect

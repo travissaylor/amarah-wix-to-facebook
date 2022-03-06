@@ -1,3 +1,4 @@
+import { stripHtml } from "string-strip-html"
 import { WixProductChoice, WixProductProperties } from "../../types/product"
 import {
     ConvertedProductInterface,
@@ -8,10 +9,15 @@ export class ProductConverterSingleStrategy
     implements ProductConverterStrategyInterface
 {
     convertProduct(product: WixProductProperties): ConvertedProductInterface[] {
+        const strippedDescription = stripHtml(product.description)
+
         const convertedProduct = {
             pid: product.id,
             title: product.name,
-            description: product.description,
+            description:
+                strippedDescription.result ||
+                product.productPageUrl.base.replace(/\/$/, "") +
+                    product.productPageUrl.path,
             link:
                 product.productPageUrl.base.replace(/\/$/, "") +
                 product.productPageUrl.path,
@@ -32,7 +38,10 @@ export class ProductConverterSingleStrategy
         }
 
         if (product.priceData.discountedPrice) {
-            convertedProduct.salePrice = product.priceData.discountedPrice + " " + product.priceData.currency
+            convertedProduct.salePrice =
+                product.priceData.discountedPrice +
+                " " +
+                product.priceData.currency
         }
 
         if (product.brand) {

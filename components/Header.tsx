@@ -1,4 +1,3 @@
-import { ReactNode } from "react"
 import {
     Box,
     Flex,
@@ -10,36 +9,24 @@ import {
     MenuList,
     MenuItem,
     MenuDivider,
-    useDisclosure,
     useColorModeValue,
     Stack,
     useColorMode,
     Center,
     Spinner,
+    HStack,
+    Icon,
 } from "@chakra-ui/react"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
+import { FaUserCircle } from "react-icons/fa"
 import { useSession } from "next-auth/react"
 import NextLink from "next/link"
 
-const NavLink = ({ children }: { children: ReactNode }) => (
-    <Link
-        px={2}
-        py={1}
-        rounded={"md"}
-        _hover={{
-            textDecoration: "none",
-            bg: useColorModeValue("gray.200", "gray.700"),
-        }}
-        href={"#"}
-    >
-        {children}
-    </Link>
-)
+const Links = [{ text: "Products", link: "/products" }]
 
 export default function Nav() {
-    const { colorMode, toggleColorMode } = useColorMode()
-    const { isOpen, onOpen, onClose } = useDisclosure()
     const { data: session, status } = useSession()
+    const { colorMode, toggleColorMode } = useColorMode()
     const loading = status === "loading"
 
     return (
@@ -55,6 +42,34 @@ export default function Nav() {
                             <Link fontSize="lg">Amarah</Link>
                         </NextLink>
                     </Box>
+
+                    {status === "authenticated" && (
+                        <HStack
+                            as={"nav"}
+                            spacing={4}
+                            display={{ base: "none", md: "flex" }}
+                        >
+                            {Links.map((link) => (
+                                <NextLink key={link.text} href={link.link}>
+                                    <Link
+                                        px={2}
+                                        py={1}
+                                        rounded={"md"}
+                                        _hover={{
+                                            textDecoration: "none",
+                                            bg: useColorModeValue(
+                                                "gray.200",
+                                                "gray.700"
+                                            ),
+                                        }}
+                                        as={"span"}
+                                    >
+                                        {link.text}
+                                    </Link>
+                                </NextLink>
+                            ))}
+                        </HStack>
+                    )}
 
                     <Flex alignItems={"center"}>
                         <Stack direction={"row"} spacing={7}>
@@ -95,12 +110,9 @@ export default function Nav() {
                                         </Center>
                                         <br />
                                         <MenuDivider />
-                                        <MenuItem>Account Settings</MenuItem>
-                                        <MenuItem>
-                                            <a href={`/api/auth/signout`}>
-                                                Logout
-                                            </a>
-                                        </MenuItem>
+                                        <a href={`/api/auth/signout`}>
+                                            <MenuItem>Logout</MenuItem>
+                                        </a>
                                     </MenuList>
                                 </Menu>
                             ) : loading ? (
@@ -108,9 +120,22 @@ export default function Nav() {
                                     <Spinner />
                                 </Center>
                             ) : (
-                                <Center>
-                                    <a href={`/api/auth/signin`}>Login</a>
-                                </Center>
+                                <Menu>
+                                    <MenuButton
+                                        as={Button}
+                                        rounded={"full"}
+                                        variant={"link"}
+                                        cursor={"pointer"}
+                                        minW={0}
+                                    >
+                                        <Icon as={FaUserCircle} w={6} h={6} />
+                                    </MenuButton>
+                                    <MenuList alignItems={"center"}>
+                                        <a href={`/api/auth/signin`}>
+                                            <MenuItem>Login</MenuItem>
+                                        </a>
+                                    </MenuList>
+                                </Menu>
                             )}
                         </Stack>
                     </Flex>
