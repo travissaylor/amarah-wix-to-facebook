@@ -35,6 +35,8 @@ export default async function handler(req, res) {
     try {
         const mappedProducts = mapProductsToSchema(products)
 
+        const deleteRes = await prisma.products.deleteMany()
+
         const update = await prisma.products.createMany({
             data: mappedProducts,
             skipDuplicates: true,

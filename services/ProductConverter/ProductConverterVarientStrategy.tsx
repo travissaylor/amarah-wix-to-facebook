@@ -50,7 +50,9 @@ export class ProductConverterVarientStrategy
                 " " +
                 variant.variant.priceData.currency,
             availability: availability || false,
-            itemGroupId: product.slug,
+            itemGroupId: `${this.kebabToSnake(
+                product.slug
+            )}_${matchingOption.name.toLocaleLowerCase()}`,
         }
 
         const imageLink =
@@ -76,7 +78,7 @@ export class ProductConverterVarientStrategy
 
         const variantData = this.getVariantData(
             matchingOption.name.toLocaleLowerCase(),
-            matchingChoice?.value
+            matchingChoice?.description || matchingChoice?.value
         )
 
         return {
@@ -84,6 +86,10 @@ export class ProductConverterVarientStrategy
             ...variantOverrides,
             ...variantData,
         }
+    }
+
+    kebabToSnake(kebab: string): string {
+        return kebab.replace(/-/g, "_")
     }
 
     getVariantData(optionName: string, choiceValue: string) {
@@ -136,9 +142,13 @@ export class ProductConverterVarientStrategy
             return null
         }
 
-        return matchingOption.choices.find(
-            (choice) => variant.choices[matchingOption.name] === choice.value
+        const matchingChoice = matchingOption.choices.find(
+            (choice) =>
+                variant.choices[matchingOption.name] === choice.value ||
+                variant.choices[matchingOption.name] === choice.description
         )
+
+        return matchingChoice
     }
 
     getDefaults(product: WixProductProperties): ConvertedProductInterface {
@@ -166,7 +176,10 @@ export class ProductConverterVarientStrategy
         }
 
         if (product.priceData.discountedPrice) {
-            convertedProduct.salePrice = product.priceData.discountedPrice + " " + product.priceData.currency
+            convertedProduct.salePrice =
+                product.priceData.discountedPrice +
+                " " +
+                product.priceData.currency
         }
         if (product.brand) {
             convertedProduct.brand = product.brand
