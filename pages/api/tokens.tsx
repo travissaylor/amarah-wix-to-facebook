@@ -10,11 +10,6 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<ResponseData>
 ) {
-    const session = await getSession({ req })
-    if (!session) {
-        return res.status(401).end()
-    }
-
     const { code } = req.query
 
     const appId = process.env.NEXT_PUBLIC_WIX_APP_ID
