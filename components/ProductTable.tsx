@@ -25,6 +25,8 @@ interface TableProps {
 
 export default function ProductTable(props: TableProps) {
     const { header, data } = props
+    const tableBackground = useColorModeValue("white", "gray.800")
+    const tableItemTextColor = useColorModeValue("gray.400", "gray.400")
     return (
         <Flex
             w="full"
@@ -35,7 +37,7 @@ export default function ProductTable(props: TableProps) {
         >
             <Table
                 w="full"
-                bg={useColorModeValue("white", "gray.800")}
+                bg={tableBackground}
                 display={{
                     base: "block",
                     md: "table",
@@ -104,10 +106,7 @@ export default function ProductTable(props: TableProps) {
                                                         display: "none",
                                                     },
                                                     textTransform: "uppercase",
-                                                    color: useColorModeValue(
-                                                        "gray.400",
-                                                        "gray.400"
-                                                    ),
+                                                    color: tableItemTextColor,
                                                     fontSize: "xs",
                                                     fontWeight: "bold",
                                                     letterSpacing: "wider",

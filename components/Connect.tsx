@@ -52,7 +52,7 @@ export default function Connect({
                 </Text>
                 {!connected && (
                     <Stack spacing={6} direction={"row"}>
-                        <a href={link} target="_blank" onClick={onClick}>
+                        <a href={link} target="_blank" rel="noreferrer" onClick={onClick}>
                             <Button
                                 rounded={"full"}
                                 px={6}

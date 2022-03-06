@@ -29,9 +29,12 @@ export default function Nav() {
     const { colorMode, toggleColorMode } = useColorMode()
     const loading = status === "loading"
 
+    const backgroundColor = useColorModeValue("gray.100", "gray.900")
+    const linkBackground = useColorModeValue("gray.200", "gray.700")
+
     return (
         <>
-            <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+            <Box bg={backgroundColor} px={4}>
                 <Flex
                     h={16}
                     alignItems={"center"}
@@ -57,10 +60,7 @@ export default function Nav() {
                                         rounded={"md"}
                                         _hover={{
                                             textDecoration: "none",
-                                            bg: useColorModeValue(
-                                                "gray.200",
-                                                "gray.700"
-                                            ),
+                                            bg: linkBackground,
                                         }}
                                         as={"span"}
                                     >
