@@ -15,8 +15,10 @@ import {
     Center,
     Spinner,
     HStack,
+    Icon,
 } from "@chakra-ui/react"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
+import { FaUserCircle } from "react-icons/fa"
 import { useSession } from "next-auth/react"
 import NextLink from "next/link"
 
@@ -108,7 +110,6 @@ export default function Nav() {
                                         </Center>
                                         <br />
                                         <MenuDivider />
-                                        <MenuItem>Account Settings</MenuItem>
                                         <a href={`/api/auth/signout`}>
                                             <MenuItem>Logout</MenuItem>
                                         </a>
@@ -119,9 +120,22 @@ export default function Nav() {
                                     <Spinner />
                                 </Center>
                             ) : (
-                                <Center>
-                                    <a href={`/api/auth/signin`}>Login</a>
-                                </Center>
+                                <Menu>
+                                    <MenuButton
+                                        as={Button}
+                                        rounded={"full"}
+                                        variant={"link"}
+                                        cursor={"pointer"}
+                                        minW={0}
+                                    >
+                                        <Icon as={FaUserCircle} w={6} h={6} />
+                                    </MenuButton>
+                                    <MenuList alignItems={"center"}>
+                                        <a href={`/api/auth/signin`}>
+                                            <MenuItem>Login</MenuItem>
+                                        </a>
+                                    </MenuList>
+                                </Menu>
                             )}
                         </Stack>
                     </Flex>
