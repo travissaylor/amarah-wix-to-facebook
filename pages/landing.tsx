@@ -1,13 +1,16 @@
 import { GetServerSideProps } from "next"
+import { useEffect } from "react"
 import Failure from "../components/Failure"
 import PublicLayout from "../components/PublicLayout"
 import Success from "../components/Success"
 import prisma from "../lib/prisma"
 
 export default function Landing({ access_token, refresh_token }) {
-    setTimeout(() => {
-        window.close()
-    }, 1000)
+    useEffect(() => {
+        setTimeout(() => {
+            window.close()
+        }, 1000)
+    }, [])
     return (
         <PublicLayout>
             {access_token && refresh_token ? <Success /> : <Failure />}
