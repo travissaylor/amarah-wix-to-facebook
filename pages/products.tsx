@@ -1,11 +1,4 @@
-import {
-    Button,
-    Flex,
-    Heading,
-    Spinner,
-    useColorModeValue,
-} from "@chakra-ui/react"
-import { GetServerSideProps } from "next"
+import { Button, Flex, Heading, Spinner } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import Layout from "../components/Layout"
 import ProductTable from "../components/ProductTable"
@@ -15,6 +8,7 @@ import { ConvertedProductInterface } from "../services/ProductConverter/ProductC
 export default function Products() {
     const [products, setProducts] = useState<ConvertedProductInterface[]>([])
     const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<boolean>(false)
 
     useEffect(() => {
         const getInitialProducts = async () => {
@@ -55,6 +49,24 @@ export default function Products() {
         }
     }
 
+    const runFill = async () => {
+        setLoading(true)
+        const apiUrlString = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/api/fill`
+        const url = new URL(apiUrlString)
+        const res = await fetch(url.toString())
+        setLoading(false)
+        if (!res.ok) {
+            setError(true)
+            console.error(res.statusText)
+            setTimeout(() => {
+                setError(false)
+            }, 2000)
+            return
+        }
+
+        location.reload()
+    }
+
     return (
         <Layout>
             <Flex
@@ -65,7 +77,38 @@ export default function Products() {
                 alignItems="center"
                 justifyContent="center"
             >
-                <Heading color="white">Products</Heading>
+                <Flex justifyContent="space-between" w="full" px={50}>
+                    <Heading color="white">Products</Heading>
+                    <Flex>
+                        {error ? (
+                            <Button
+                                bg="red.300"
+                                color="white"
+                                mr={2}
+                                onClick={runFill}
+                            >
+                                {loading ? <Spinner /> : "Run Fill"}
+                            </Button>
+                        ) : (
+                            <Button
+                                bg="white"
+                                color="gray.600"
+                                mr={2}
+                                onClick={runFill}
+                            >
+                                {loading ? <Spinner /> : "Run Fill"}
+                            </Button>
+                        )}
+                        <Button
+                            bg="white"
+                            color="gray.600"
+                            as={"a"}
+                            href="/api/csv"
+                        >
+                            Download CSV
+                        </Button>
+                    </Flex>
+                </Flex>
 
                 <ProductTable
                     header={["Name", "Image Link", "Price"]}
@@ -75,7 +118,7 @@ export default function Products() {
                         price: product.price,
                     }))}
                 />
-                <Button onClick={loadMore}>
+                <Button bg="white" color="gray.600" onClick={loadMore}>
                     {loading ? <Spinner /> : "Load More"}
                 </Button>
             </Flex>
