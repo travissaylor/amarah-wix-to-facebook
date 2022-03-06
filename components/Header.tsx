@@ -1,4 +1,3 @@
-import { ReactNode } from "react"
 import {
     Box,
     Flex,
@@ -10,7 +9,6 @@ import {
     MenuList,
     MenuItem,
     MenuDivider,
-    useDisclosure,
     useColorModeValue,
     Stack,
     useColorMode,
@@ -24,25 +22,9 @@ import NextLink from "next/link"
 
 const Links = [{ text: "Products", link: "/products" }]
 
-const NavLink = ({ children }: { children: ReactNode }) => (
-    <Link
-        px={2}
-        py={1}
-        rounded={"md"}
-        _hover={{
-            textDecoration: "none",
-            bg: useColorModeValue("gray.200", "gray.700"),
-        }}
-        as={"span"}
-    >
-        {children}
-    </Link>
-)
-
 export default function Nav() {
-    const { colorMode, toggleColorMode } = useColorMode()
-    const { isOpen, onOpen, onClose } = useDisclosure()
     const { data: session, status } = useSession()
+    const { colorMode, toggleColorMode } = useColorMode()
     const loading = status === "loading"
 
     return (
@@ -59,31 +41,33 @@ export default function Nav() {
                         </NextLink>
                     </Box>
 
-                    <HStack
-                        as={"nav"}
-                        spacing={4}
-                        display={{ base: "none", md: "flex" }}
-                    >
-                        {Links.map((link) => (
-                            <NextLink key={link.text} href={link.link}>
-                                <Link
-                                    px={2}
-                                    py={1}
-                                    rounded={"md"}
-                                    _hover={{
-                                        textDecoration: "none",
-                                        bg: useColorModeValue(
-                                            "gray.200",
-                                            "gray.700"
-                                        ),
-                                    }}
-                                    as={"span"}
-                                >
-                                    {link.text}
-                                </Link>
-                            </NextLink>
-                        ))}
-                    </HStack>
+                    {status === "authenticated" && (
+                        <HStack
+                            as={"nav"}
+                            spacing={4}
+                            display={{ base: "none", md: "flex" }}
+                        >
+                            {Links.map((link) => (
+                                <NextLink key={link.text} href={link.link}>
+                                    <Link
+                                        px={2}
+                                        py={1}
+                                        rounded={"md"}
+                                        _hover={{
+                                            textDecoration: "none",
+                                            bg: useColorModeValue(
+                                                "gray.200",
+                                                "gray.700"
+                                            ),
+                                        }}
+                                        as={"span"}
+                                    >
+                                        {link.text}
+                                    </Link>
+                                </NextLink>
+                            ))}
+                        </HStack>
+                    )}
 
                     <Flex alignItems={"center"}>
                         <Stack direction={"row"} spacing={7}>
@@ -125,11 +109,9 @@ export default function Nav() {
                                         <br />
                                         <MenuDivider />
                                         <MenuItem>Account Settings</MenuItem>
-                                        <MenuItem>
-                                            <a href={`/api/auth/signout`}>
-                                                Logout
-                                            </a>
-                                        </MenuItem>
+                                        <a href={`/api/auth/signout`}>
+                                            <MenuItem>Logout</MenuItem>
+                                        </a>
                                     </MenuList>
                                 </Menu>
                             ) : loading ? (
