@@ -33,8 +33,7 @@ export default async function handler(
             products = await getProducts(access_token)
         } catch (error) {
             const errorBody = await error.response.json()
-            res.status(500).json(errorBody).end()
-            return
+            return res.status(500).json(errorBody)
         }
     }
 

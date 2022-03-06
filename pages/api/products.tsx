@@ -14,8 +14,7 @@ export default async function handler(
     const { skip = "0", take = "10" } = req.query
 
     if (typeof skip !== "string" || typeof take !== "string") {
-        res.status(500).end()
-        return
+        return res.status(500).end()
     }
 
     const skipInt = parseInt(skip)
@@ -29,8 +28,7 @@ export default async function handler(
 
         res.status(200).json(queryRes)
     } catch (error) {
-        res.status(500).end()
         console.error(error)
-        return
+        return res.status(500).end()
     }
 }
