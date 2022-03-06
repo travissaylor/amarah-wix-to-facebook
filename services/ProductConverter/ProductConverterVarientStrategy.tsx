@@ -142,13 +142,11 @@ export class ProductConverterVarientStrategy
             return null
         }
 
-        const matchingChoice = matchingOption.choices.find(
+        return matchingOption.choices.find(
             (choice) =>
                 variant.choices[matchingOption.name] === choice.value ||
                 variant.choices[matchingOption.name] === choice.description
         )
-
-        return matchingChoice
     }
 
     getDefaults(product: WixProductProperties): ConvertedProductInterface {
