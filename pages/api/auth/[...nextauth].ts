@@ -7,6 +7,7 @@ import prisma from "../../../lib/prisma"
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
     adapter: PrismaAdapter(prisma),
+    secret: process.env.SECRET,
     // https://next-auth.js.org/configuration/providers/oauth
     providers: [
         FacebookProvider({
@@ -30,10 +31,6 @@ export default NextAuth({
 
             return allowedEmails.includes(user?.email)
         },
-        // async jwt({ token }) {
-        //     token.userRole = "admin"
-        //     return token
-        // },
     },
     session: {
         // Choose how you want to save the user session.
