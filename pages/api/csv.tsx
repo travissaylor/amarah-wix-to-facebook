@@ -20,16 +20,7 @@ interface FaceBookFormatInterface {
     mpn: string
     size: string
     color: string
-    saying: string
-    design: string
-    metal: string
-    scent: string
-    style: string
-    flavor: string
-    card: string
-    tv_show: string
-    scent_selection: string
-    skin_type: string
+    additional_variant_attribute: string
 }
 
 export default async function handler(
@@ -59,32 +50,43 @@ export default async function handler(
 const productsToFacebookFormat = (
     products: Products[]
 ): FaceBookFormatInterface[] => {
-    return products.map((product) => ({
-        id: product.pid,
-        title: product.title,
-        description: product.description,
-        link: product.link,
-        image_link: product.imageLink,
-        additional_image_link: product.additionalImageLink,
-        price: product.price,
-        availability: product.availability ? "in stock" : "out of stock",
-        inventory: product.inventory,
-        item_group_id: product.itemGroupId || "",
-        sale_price: product.salePrice || "",
-        sale_price_effective_date: "",
-        brand: product.brand || "",
-        mpn: product.mpn || "",
-        size: product.size || "",
-        color: product.color || "",
-        saying: product.saying || "",
-        design: product.design || "",
-        metal: product.metal || "",
-        scent: product.scent || "",
-        style: product.style || "",
-        flavor: product.flavor || "",
-        card: product.card || "",
-        tv_show: product.tvShow || "",
-        scent_selection: product.scentSelection || "",
-        skin_type: product.skinType || "",
-    }))
+    return products.map((product) => {
+        const additionalVariantAttributesObject =
+            product.additionalVariantAttributes &&
+            typeof product.additionalVariantAttributes === "string"
+                ? JSON.parse(product.additionalVariantAttributes)
+                : {}
+
+        let additionalVariantAttributes = ""
+        Object.keys(additionalVariantAttributesObject).forEach(
+            (variantObjectKey, index) => {
+                additionalVariantAttributes += `${variantObjectKey}:${
+                    additionalVariantAttributesObject[variantObjectKey]
+                }${
+                    index !== additionalVariantAttributesObject.length - 1
+                        ? ","
+                        : ""
+                }`
+            }
+        )
+        return {
+            id: product.pid,
+            title: product.title,
+            description: product.description,
+            link: product.link,
+            image_link: product.imageLink,
+            additional_image_link: product.additionalImageLink,
+            price: product.price,
+            availability: product.availability ? "in stock" : "out of stock",
+            inventory: product.inventory,
+            item_group_id: product.itemGroupId || "",
+            sale_price: product.salePrice || "",
+            sale_price_effective_date: "",
+            brand: product.brand || "",
+            mpn: product.mpn || "",
+            size: product.size || "",
+            color: product.color || "",
+            additional_variant_attribute: additionalVariantAttributes,
+        }
+    })
 }

@@ -26,6 +26,10 @@ interface VariantOverridesInterface {
     itemGroupId?: string
     size?: string
     color?: string
+    additionalVariantAttributes?: string
+}
+
+interface AdditionalVariantAttributesInterface {
     design?: string
     metal?: string
     scent?: string
@@ -36,6 +40,12 @@ interface VariantOverridesInterface {
     saying?: string
     scentSelection?: string
     skinType?: string
+}
+
+interface VariantDataInterface {
+    size?: string
+    color?: string
+    additionalVariantAttributes?: string
 }
 
 export class ProductConverterVarientStrategy
@@ -121,7 +131,7 @@ export class ProductConverterVarientStrategy
         return kebab.replace(/-/g, "_")
     }
 
-    getVariantData(optionName: string, choiceValue: string) {
+    getVariantData(optionName: string, choiceValue: string): VariantDataInterface {
         const varientOptions = [
             "size",
             "color",
@@ -137,11 +147,17 @@ export class ProductConverterVarientStrategy
             "skinType",
         ]
 
-        const variantData = {}
+        const variantData: VariantDataInterface = {}
 
         varientOptions.forEach((option) => {
-            if (option === optionName) {
+            if (option !== optionName) {
+                return
+            }
+
+            if (option === "size" || option === "color") {
                 variantData[option] = choiceValue
+            } else {
+                variantData.additionalVariantAttributes = JSON.stringify({[option]: choiceValue})
             }
         })
 
@@ -207,7 +223,7 @@ export class ProductConverterVarientStrategy
             availability: product.stock.inStock || false,
             inventory: product.stock.quantity,
             mpn: product.numericId,
-            brand: product.brand
+            brand: product.brand,
         }
 
         return convertedProduct

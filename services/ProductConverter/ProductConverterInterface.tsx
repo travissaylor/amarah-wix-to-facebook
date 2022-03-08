@@ -16,16 +16,7 @@ export interface ConvertedProductInterface {
     itemGroupId?: string
     size?: string
     color?: string
-    design?: string
-    metal?: string
-    scent?: string
-    style?: string
-    flavor?: string
-    card?: string
-    tvShow?: string
-    saying?: string
-    scentSelection?: string
-    skinType?: string
+    additionalVariantAttributes?: string
 }
 
 export interface ProductConverterStrategyInterface {
