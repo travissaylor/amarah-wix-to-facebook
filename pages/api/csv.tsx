@@ -23,6 +23,7 @@ interface FaceBookFormatInterface {
     additional_variant_attribute: string
     quantity_to_sell_on_facebook: number
     google_product_category: string
+    condition: "new" | "refurbished" | "used"
 }
 
 export default async function handler(
@@ -90,7 +91,8 @@ const productsToFacebookFormat = (
             color: product.color || "",
             additional_variant_attribute: additionalVariantAttributes,
             quantity_to_sell_on_facebook: product.inventory ?? 0,
-            google_product_category: ""
+            google_product_category: "",
+            condition: "new"
         }
     })
 }
