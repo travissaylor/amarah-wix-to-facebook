@@ -21,6 +21,8 @@ interface FaceBookFormatInterface {
     size: string
     color: string
     additional_variant_attribute: string
+    quantity_to_sell_on_facebook: number
+    google_product_category: string
 }
 
 export default async function handler(
@@ -78,7 +80,7 @@ const productsToFacebookFormat = (
             additional_image_link: product.additionalImageLink,
             price: product.price,
             availability: product.availability ? "in stock" : "out of stock",
-            inventory: product.inventory,
+            inventory: product.inventory ?? 0,
             item_group_id: product.itemGroupId || "",
             sale_price: product.salePrice || "",
             sale_price_effective_date: "",
@@ -87,6 +89,8 @@ const productsToFacebookFormat = (
             size: product.size || "",
             color: product.color || "",
             additional_variant_attribute: additionalVariantAttributes,
+            quantity_to_sell_on_facebook: product.inventory ?? 0,
+            google_product_category: ""
         }
     })
 }
