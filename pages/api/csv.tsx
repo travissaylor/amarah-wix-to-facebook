@@ -74,11 +74,11 @@ const productsToFacebookFormat = (
         )
         return {
             id: product.pid,
-            title: product.title,
-            description: product.description,
-            link: product.link,
-            image_link: product.imageLink,
-            additional_image_link: product.additionalImageLink,
+            title: escapeHtmlEncode(product.title),
+            description: escapeHtmlEncode(product.description),
+            link: escapeUrlEncode(product.link),
+            image_link: escapeUrlEncode(product.imageLink),
+            additional_image_link: product.additionalImageLink ? escapeUrlEncode(product.additionalImageLink) : "",
             price: product.price,
             availability: product.availability ? "in stock" : "out of stock",
             inventory: product.inventory ?? 0,
@@ -92,7 +92,11 @@ const productsToFacebookFormat = (
             additional_variant_attribute: additionalVariantAttributes,
             quantity_to_sell_on_facebook: product.inventory ?? 0,
             google_product_category: "",
-            condition: "new"
+            condition: "new",
         }
     })
 }
+
+const escapeUrlEncode = (string: string): string => string.replaceAll(",", "%2C")
+
+const escapeHtmlEncode = (string: string): string => string.replaceAll(",", "&comma;")
