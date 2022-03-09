@@ -97,6 +97,6 @@ const productsToFacebookFormat = (
     })
 }
 
-const escapeUrlEncode = (string: string): string => string.replaceAll(",", "%2C")
+const escapeUrlEncode = (string: string): string => string.replace(/,/g, '%2C');
 
-const escapeHtmlEncode = (string: string): string => string.replaceAll(",", "&comma;")
+const escapeHtmlEncode = (string: string): string => string.replace(/,/g, "&comma;")
