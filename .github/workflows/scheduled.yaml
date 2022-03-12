@@ -5,9 +5,11 @@ on:
 jobs:
   cron:
     runs-on: ubuntu-latest
+    env: 
+      ACTION_KEY: ${{ secrets.ACTION_KEY }}
     steps:
       - name: Hourly cron job
         run: |
           curl --request POST \
           --url 'https://amarah-data.saylordevelopment.com/api/fill' \
-          --header 'Authorization: Bearer ${{ secrets.ACTION_KEY }}'
+          --header 'Authorization: Bearer $ACTION_KEY'

@@ -14,6 +14,8 @@ export default function Products() {
         const getInitialProducts = async () => {
             try {
                 const queryResponse = await fetchProducts()
+                console.log(queryResponse)
+
                 setProducts(queryResponse)
                 setLoading(false)
             } catch (error) {
