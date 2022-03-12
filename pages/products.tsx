@@ -1,12 +1,12 @@
-import { Button, Flex, Heading, Spinner } from "@chakra-ui/react"
+import { Button, Flex, Heading, Spinner, Text } from "@chakra-ui/react"
+import { Products as PrismaProducts } from "@prisma/client"
 import { useEffect, useState } from "react"
 import Layout from "../components/Layout"
 import ProductTable from "../components/ProductTable"
 import FetchError from "../exceptions/FetchError"
-import { ConvertedProductInterface } from "../services/ProductConverter/ProductConverterInterface"
 
 export default function Products() {
-    const [products, setProducts] = useState<ConvertedProductInterface[]>([])
+    const [products, setProducts] = useState<PrismaProducts[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<boolean>(false)
 
@@ -14,8 +14,6 @@ export default function Products() {
         const getInitialProducts = async () => {
             try {
                 const queryResponse = await fetchProducts()
-                console.log(queryResponse)
-
                 setProducts(queryResponse)
                 setLoading(false)
             } catch (error) {
@@ -69,6 +67,9 @@ export default function Products() {
         location.reload()
     }
 
+    const updatedAt = products && products.length > 0 ? products[0].updatedAt : null
+    const updatedAtDate = updatedAt ? new Date(updatedAt).toLocaleString() : "N/A"
+
     return (
         <Layout>
             <Flex
@@ -80,7 +81,10 @@ export default function Products() {
                 justifyContent="center"
             >
                 <Flex justifyContent="space-between" w="full" px={50}>
-                    <Heading color="white">Products</Heading>
+                    <Flex direction="column">
+                        <Heading color="white">Products</Heading>
+                        <Text color="white">Updated At: {updatedAtDate}</Text>
+                    </Flex>
                     <Flex>
                         {error ? (
                             <Button
