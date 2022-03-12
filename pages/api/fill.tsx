@@ -10,7 +10,10 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const session = await getSession({ req })
-    if (!session) {
+    const { APP_KEY } = process.env
+    const ACTION_KEY = req.headers?.authorization?.split(" ")[1]
+
+    if (!session && ACTION_KEY !== APP_KEY) {
         return res.status(401).end()
     }
 
