@@ -96,8 +96,8 @@ export class ProductConverterVarientStrategy
 
         const imageLink =
             matchingChoice && matchingChoice.media
-                ? matchingChoice.media.mainMedia?.image.url
-                : product.media.mainMedia.image.url
+                ? matchingChoice.media.mainMedia?.image?.url
+                : product.media.mainMedia.image?.url
 
         if (imageLink) {
             variantOverrides.imageLink = imageLink
@@ -108,7 +108,7 @@ export class ProductConverterVarientStrategy
             matchingChoice.media?.items.length > 1 &&
             matchingChoice.media?.items[1].id !==
                 matchingChoice.media?.mainMedia.id
-                ? matchingChoice.media.items[1].image.url
+                ? matchingChoice.media.items[1].image?.url
                 : null
 
         if (additionalImageLink) {
@@ -199,8 +199,8 @@ export class ProductConverterVarientStrategy
 
         const additionalImageLink =
             product.media.items[0].id === product.media.mainMedia.id
-                ? product.media.items[1]?.image.url
-                : product.media.items[0].image.url
+                ? product.media.items[1]?.image?.url
+                : product.media.items[0].image?.url
 
         const convertedProduct = {
             pid: product.id,
@@ -213,7 +213,7 @@ export class ProductConverterVarientStrategy
                 product.productPageUrl.base.replace(/\/$/, "") +
                 product.productPageUrl.path,
             additionalImageLink: additionalImageLink,
-            imageLink: product.media.mainMedia.image.url,
+            imageLink: product.media.mainMedia.image?.url ?? '',
             price: product.priceData.price + " " + product.priceData.currency,
             salePrice: product.priceData.discountedPrice
                 ? product.priceData.discountedPrice +

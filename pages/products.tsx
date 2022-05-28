@@ -117,11 +117,12 @@ export default function Products() {
                 </Flex>
 
                 <ProductTable
-                    header={["Name", "Image Link", "Price"]}
+                    header={["Name", "Image Link", "Price", "Inventory"]}
                     data={products.map((product) => ({
                         name: product.title,
                         imageLink: product.imageLink,
                         price: product.price,
+                        inventory: product.inventory
                     }))}
                 />
                 <Button bg="white" color="gray.600" onClick={loadMore}>

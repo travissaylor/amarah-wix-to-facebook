@@ -16,6 +16,7 @@ interface DataItem {
     name: string
     imageLink: string
     price: string
+    inventory: number | null
 }
 
 interface TableProps {
