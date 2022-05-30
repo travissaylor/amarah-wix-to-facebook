@@ -80,7 +80,7 @@ export default function Products() {
                 alignItems="center"
                 justifyContent="center"
             >
-                <Flex justifyContent="space-between" w="full" px={50}>
+                <Flex justifyContent="space-between" w="full" px={50} wrap="wrap">
                     <Flex direction="column">
                         <Heading color="white">Products</Heading>
                         <Text color="white">Updated At: {updatedAtDate}</Text>
@@ -117,10 +117,10 @@ export default function Products() {
                 </Flex>
 
                 <ProductTable
-                    header={["Name", "Image Link", "Price", "Inventory"]}
+                    header={["Image Link", "Name", "Price", "Inventory"]}
                     data={products.map((product) => ({
-                        name: product.title,
                         imageLink: product.imageLink,
+                        name: product.title,
                         price: product.price,
                         inventory: product.inventory
                     }))}
