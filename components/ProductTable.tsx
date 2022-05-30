@@ -10,7 +10,10 @@ import {
     Th,
     Td,
     Tbody,
+    Center,
+    Text,
 } from "@chakra-ui/react"
+import Image from "next/image"
 
 interface DataItem {
     name: string
@@ -32,13 +35,21 @@ export default function ProductTable(props: TableProps) {
         <Flex
             w="full"
             bg="gray.600"
-            p={50}
+            my={{
+                base: 5,
+                md: 0,
+            }}
+            p={{
+                base: 0,
+                md: 50,
+            }}
             alignItems="center"
             justifyContent="center"
         >
             <Table
                 w="full"
                 bg={tableBackground}
+                variant="striped"
                 display={{
                     base: "block",
                     md: "table",
@@ -95,6 +106,64 @@ export default function ProductTable(props: TableProps) {
                                 }}
                             >
                                 {Object.keys(token).map((x) => {
+                                    console.log({ x })
+                                    if (x === "imageLink") {
+                                        return (
+                                            <React.Fragment key={`${tid}${x}`}>
+                                                <Td
+                                                    display={{
+                                                        base: "table-cell",
+                                                        md: "none",
+                                                    }}
+                                                    sx={{
+                                                        "@media print": {
+                                                            display: "none",
+                                                        },
+                                                        textTransform:
+                                                            "uppercase",
+                                                        color: tableItemTextColor,
+                                                        fontSize: "xs",
+                                                        fontWeight: "bold",
+                                                        letterSpacing: "wider",
+                                                        fontFamily: "heading",
+                                                    }}
+                                                >
+                                                    {x}
+                                                </Td>
+                                                <Td
+                                                    color={"gray.500"}
+                                                    fontSize="lg"
+                                                    fontWeight="light"
+                                                >
+                                                    {token[x] &&
+                                                    token[x] != "" ? (
+                                                        <Image
+                                                            src={token[x]}
+                                                            width={200}
+                                                            height={200}
+                                                            objectFit="cover"
+                                                        />
+                                                    ) : (
+                                                        <Center
+                                                            w={{
+                                                                base: 150,
+                                                                md: 200,
+                                                            }}
+                                                            h={{
+                                                                base: 150,
+                                                                md: 200,
+                                                            }}
+                                                            bg={"gray.100"}
+                                                        >
+                                                            <Text>
+                                                                No Image
+                                                            </Text>
+                                                        </Center>
+                                                    )}
+                                                </Td>
+                                            </React.Fragment>
+                                        )
+                                    }
                                     return (
                                         <React.Fragment key={`${tid}${x}`}>
                                             <Td
