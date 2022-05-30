@@ -1,4 +1,4 @@
-name: Hourly cron job
+name: Daily cron job
 on:
   schedule:
     - cron: '0 0 * * *'
@@ -6,7 +6,7 @@ jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Hourly cron job
+      - name: Daily cron job
         run: |
           curl --request POST \
           --url 'https://amarah-data.saylordevelopment.com/api/fill' \
